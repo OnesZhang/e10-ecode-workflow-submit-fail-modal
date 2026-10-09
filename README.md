@@ -54,7 +54,8 @@ Two details worth knowing if you adapt this approach:
 - **PC workflow detail page only** (`/sp/workflow/flowpage/*`).
 - Mobile (`MFPMainTabWillMount` / mobile route) and the flow-detail dialog opened from a list
   (URL not under that prefix) are intentionally left untouched — those already live inside their own container.
-- Developed and verified against E10 with `@weapp/ecodesdk` 0.1.53 and `@weapp/ui` 0.0.387.
+- Developed and verified against E10 with `@weapp/ecodesdk` 0.1.53 and `@weapp/ui` 0.0.387-hotfix7
+  (read from `weappEcodesdk.version` / `weappUi.version` at runtime on the target page).
 
 ## Project structure
 
