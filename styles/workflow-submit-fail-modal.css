@@ -1,0 +1,109 @@
+/**
+ * 流程提交失败提示 —— 弹窗化样式（前置加载，仅类名命中时生效）
+ *
+ * 作用对象：平台流程详情页提示节点 .wffp-operate-msgTip
+ * 视觉基调：平台原为红色错误条，这里改成「白色对话框 + 琥珀提醒 + 浅琥珀条件块」，对用户更柔和
+ * 约定：第 1 段改造平台节点，需 !important 压过平台样式；第 2 段是本应用自己的节点，不需要
+ */
+:root {
+  --wffp-fail-top: 12vh;
+  --wffp-fail-width: min(640px, 92vw);
+}
+
+/* ---------- 1. 平台提示节点 → 居中弹窗 ---------- */
+.wffp-operate-msgTip.wffp-submit-fail-modal-card {
+  position: fixed !important;
+  left: 50% !important;
+  top: var(--wffp-fail-top) !important;
+  transform: translateX(-50%) !important;
+  width: var(--wffp-fail-width) !important;
+  max-height: 74vh !important;
+  overflow: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box;
+  background: #fff !important;
+  border: none !important;
+  border-radius: 14px !important;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  color: #595959 !important;
+  font-size: 13px !important;
+  z-index: 1100 !important; /* 高于页面悬浮工具（实测 998/999），低于平台浮层 */
+}
+
+/* 标题栏 */
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipTitle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin: 0 !important;
+  padding: 18px 24px 14px !important;
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipTitle-text { font-size: 15px !important; font-weight: 600 !important; color: #262626 !important; }
+/* 感叹号图标改琥珀色，去掉「系统报错」观感；弹窗也不需要平台的折叠按钮 */
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipTitle-icon,
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipTitle-icon svg { color: #faad14 !important; }
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipTitle > div[title='收缩全部'] { display: none !important; }
+
+/* 正文与出口条件明细 */
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipTop { margin: 0 !important; padding: 16px 24px 0 !important; color: #595959 !important; font-size: 13px !important; line-height: 1.7 !important; }
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipFirst { margin: 12px 24px 0 !important; padding: 12px 16px !important; background: #fffbf0 !important; border-left: 3px solid #ffe58f !important; border-radius: 6px !important; }
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipThird { margin: 0 0 4px !important; color: #595959 !important; font-size: 13px !important; line-height: 1.9 !important; }
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipThird_color { color: #262626 !important; font-weight: 600 !important; }
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipThird .primaryColor { color: #d48806 !important; font-weight: 600 !important; }
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipBottom { margin: 14px 24px 18px !important; color: #8c8c8c !important; font-size: 12px !important; line-height: 1.7 !important; }
+.wffp-operate-msgTip.wffp-submit-fail-modal-card .msgTipBottom .primaryColor { color: #1677ff !important; cursor: pointer; }
+
+/* 关闭后隐藏原内联提示 */
+body.wffp-submit-fail-modal-dismissed .wffp-operate-msgTip.wffp-submit-fail-modal-card { display: none !important; }
+
+/* 「条件」的悬浮提示是平台 z-index:999 的浮层，必须抬到弹窗之上，否则悬停看不到条件表达式 */
+body.wffp-submit-fail-modal-open .ui-trigger-popupInner { z-index: 1200 !important; }
+
+/* ---------- 2. 本应用节点 ---------- */
+/* 遮罩：点击即关闭 */
+.wffp-submit-fail-modal-mask { position: fixed; inset: 0; z-index: 1050; background: rgba(0, 0, 0, 0.35); }
+
+/* 关闭按钮：用与卡片相同的变量直接定位到右上角 */
+.wffp-submit-fail-modal-close {
+  position: fixed;
+  left: calc(50% + var(--wffp-fail-width) / 2);
+  top: var(--wffp-fail-top);
+  transform: translate(-50%, -50%);
+  z-index: 1150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  color: #8c8c8c;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+.wffp-submit-fail-modal-close:hover { color: #262626; }
+
+/* 关闭后的重新查看入口 */
+.wffp-submit-fail-modal-reopen {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1050;
+  padding: 8px 14px;
+  border: 1px solid #ffe58f;
+  border-radius: 16px;
+  background: #fffbe6;
+  color: #ad6800;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.wffp-submit-fail-modal-reopen:hover { background: #fff7cc; }
